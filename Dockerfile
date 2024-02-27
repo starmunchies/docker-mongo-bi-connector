@@ -20,10 +20,15 @@ RUN wget -O /app/mongodb-bi-linux-arm64-ubuntu2204-v2.14.12.tgz https://info-mon
 EXPOSE 3307
 
 # Set the entrypoint command
-run openssl req -newkey rsa:2048 -new -x509 -days 365 -nodes -out /etc/ssl/mongoconnect.pem -keyout /etc/ssl/mongoconnect.pem -subj '/CN=localhost'
+#run openssl req -newkey rsa:2048 -new -x509 -days 365 -nodes -out /etc/ssl/mongokeyfile/mongoconnect.pem -keyout /etc/ssl/mongokeyfile/mongoconnect.pem -subj '/CN=localhost'
+#COPY cert.txt /app/mongo-bi-connector/Cert.txt
 
+#RUN cat /app/mongo-bi-connector/Cert.txt >> /etc/ssl/mongoconnect.pem
 # Copy the entrypoint script
+
 COPY entrypoint.sh .
+
+COPY config.yml /app/mongo-bi-connector/example-mongosqld-config.yml
 
 run chmod +x /app/entrypoint.sh
 
