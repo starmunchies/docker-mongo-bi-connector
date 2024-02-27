@@ -1,16 +1,16 @@
-# Use an ARM-compatible base image
+#   Use an ARM-compatible base image
 FROM ubuntu:latest
 
-# Set the working directory
+#   Set the working directory
 WORKDIR /app
 
-# Install necessary dependencies
+#   Install necessary dependencies
 RUN apt-get update && \
     apt-get install -y wget rsyslog && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Download and install MongoBI Connector (Replace the URL with the correct one)
+#   Download and install MongoBI Connector (Replace the URL with the most up to date version)
 RUN wget -O /app/mongodb-bi-linux-arm64-ubuntu2204-v2.14.12.tgz https://info-mongodb-com.s3.amazonaws.com/mongodb-bi/v2/mongodb-bi-linux-arm64-ubuntu2204-v2.14.12.tgz && \
     tar -xzf /app/mongodb-bi-linux-arm64-ubuntu2204-v2.14.12.tgz && \
     chmod +x /app/mongodb-bi-linux-arm64-ubuntu2204-v2.14.12/bin/* && \
@@ -19,17 +19,12 @@ RUN wget -O /app/mongodb-bi-linux-arm64-ubuntu2204-v2.14.12.tgz https://info-mon
 # Expose any ports required by MongoBI Connector
 EXPOSE 3307
 
-# Set the entrypoint command
-#run openssl req -newkey rsa:2048 -new -x509 -days 365 -nodes -out /etc/ssl/mongokeyfile/mongoconnect.pem -keyout /etc/ssl/mongokeyfile/mongoconnect.pem -subj '/CN=localhost'
-#COPY cert.txt /app/mongo-bi-connector/Cert.txt
-
-#RUN cat /app/mongo-bi-connector/Cert.txt >> /etc/ssl/mongoconnect.pem
 # Copy the entrypoint script
-
 COPY entrypoint.sh .
 
+# Pass over the config file
 COPY config.yml /app/mongo-bi-connector/example-mongosqld-config.yml
-
+# Allow the entrypoint script to be executed
 run chmod +x /app/entrypoint.sh
 
 
