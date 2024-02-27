@@ -1,8 +1,9 @@
-**Docker image for setting up the mongo-bi-connector in a container**
+**Docker image for setting up the mongo-bi-connector arm64 in a container**
 
 # Usage
 
 ```docker build -t mongo-bi-connector .```
+
 ```docker compose up```
 
 # Enviroment Variables
