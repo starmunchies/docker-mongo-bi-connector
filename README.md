@@ -1,56 +1,23 @@
-**Docker image sources for setting up the mongo-bi-connector in a container**
+**Docker image for setting up the mongo-bi-connector in a container**
 
 # Usage
 
-```docker build -t mongo-bi-connector```
+```docker build -t mongo-bi-connector .```
+```docker compose up```
 
-```docker run -p 9015:3307 -d mongo-bi-connector -e DB_NAME=your_mongo_db -e MONGO_HOST=your_mongo_host -e MONGO_PORT=your_mongo_port```
+# Enviroment Variables
 
-where 8080 is your local machine port
+Add to an .env file or can be specified in a Docker-compose file.
 
-# Is it working?
+ +  MONGO_URI
+ +  MONGO_USERNAME
+ +  MONGO_PASSWORD
+ +  MONGO_AUTH_SOURCE
 
-To check if it's properly working install a mysql client and test the following command :
-
-```mysql --protocol tcp --port 9015 --verbose```
-
-If you have the MySQL welcome message, it is working, you can check your tables with
-```use <whatever_your_db>; show tables;```
-
-# Authentication
-
-This image also handles authentication enabled databases
-just add the following env variables:
-
-+ MONGO_USERNAME
-+ MONGO_PASSWORD
-+ MONGO_AUTH_DB
-+ SSL_STRING
-
-SSL string will be the subj option to the openssl auto-signed certificate creation that is needed to run sqld in auth mode...
-
-# Docker compose
-I added a docker compose exemple as an exemple that links the bi-connector container to a mongo container.
-
-# License
-
-Keep in mind that this include licensed content and requires a Mongodb entreprise license.
+As the key is generated and added All you have to do is to append any certificates that connect to this service. This will be shown in the example docker-compose file
 
 # FAQ
 
 **Sometimes the connector connects before my mongo db is loaded thus failing.**
 
-That's why I included the wait-for-it.sh script that will allow you to check if the host and port is available before initializing the connection.
-To use it you need to override the  default command
-
-Example with docker compose:
-
-```command: ["wait-for-it.sh", "-t", "0", "my-mongo-db:27017", "--","run.sh","-vv"] ```
-
-**How to add a collection to the schema?**
-
-With a running MongoDB you can use the mongodrdl executable to infer the schema of a collection.
-
-```mongodrdl -d <db_name> -c <collection_name> -o tmp.drdl -u <user> -s 100000 -p <password> --authenticationDatabase <auth_info>```
-
-You can now append the content of the tmp.drdl file to your schema file, which is schema/mongomysqlmap.drdl by default (remember to get rid of the first line of the tmp.drdl first).
+To get around this in your compose file add mongo as a dependency.
